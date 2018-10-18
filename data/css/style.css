@@ -1,0 +1,232 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+html {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAMAAACeL25MAAAABlBMVEX////OysUU6GHPAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxJREFUCNdjYGTAAAAAJwACR9dTnQAAAABJRU5ErkJggg==);
+	margin: 40px 0;
+}
+
+body {
+	background: #fff;
+	border: 1px solid #ccc;
+	margin: auto auto;
+	padding: 20px 10px;
+	color: #4B4B6D;
+	font-size: 20px;
+	font-family: "URW Gothic L",Helvetica,Verdana;
+	max-width: 640px;
+	overflow: auto;
+}
+
+h2 {
+	font-size: 30px;
+	margin-top: 25px;
+	margin-bottom: 10px;
+}
+
+p.message {
+	margin: 40px 10px;
+}
+
+form td.actions {
+	text-align: right;
+	padding: 5px 0;
+}
+
+button {
+	padding: 4px 8px;
+	margin: 4px 2px;
+}
+
+.popup {
+	border: 1px solid #ccc;
+	padding: 15px 10px;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAMAAACeL25MAAAABlBMVEX////OysUU6GHPAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxJREFUCNdjYGTAAAAAJwACR9dTnQAAAABJRU5ErkJggg==);
+	position: fixed;
+	right: 0;
+	left: 0;
+	top: 0;
+	bottom: 0;
+}
+
+form {
+	margin: 5px;
+	border: 1px solid #eee;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+form > table {
+	margin: 5px auto;
+}
+
+th {
+	text-align: right;
+	font-size: 15px; 
+	padding: 6px 4px;
+}
+
+.client {
+	text-align: center;
+}
+
+.colorWidget input {
+	padding: 10px;
+	width: 400px;
+}
+
+.colorWidget {
+	background-color: #eee;
+	padding: 20px 40px;
+	border-radius: 25px;
+}
+
+.colorWidget {
+	margin: 5px auto;
+}
+
+.colorWidget > table {
+	margin: 5px auto;
+}
+
+.colorWidget > table > tr > th {
+	vertical-align: middle;
+	text-align: right;
+	color: gray;
+	font-size: 12px;
+	padding-right: 5px;
+}
+
+.colorWidget > div.rgb {
+	text-align: right;
+	font-size: 70%;
+	opacity: 0.6;
+}
+
+.toggleWidget {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+}
+
+.toggleWidget input {
+	display:none;
+}
+
+.toggleWidget > .slider {	
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 34px;
+}
+
+.toggleWidget > .slider:before {
+	position: absolute;
+	content: "";
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 50%;
+}
+
+.toggleWidget > input:checked + .slider {
+	background-color: #408040;
+}
+
+.toggleWidget > input:checked + .slider:before {
+	-webkit-transform: translateX(26px);
+	-ms-transform: translateX(26px);
+	transform: translateX(26px);
+}
+
+.brightnessWidget {
+	position: relative;
+}
+
+.brightnessWidget > span {
+	position: absolute;
+	right: 10px;
+	top: -10px;
+}
+
+.brightnessWidget > input {
+	padding: 10px;
+	width: 400px;
+}
+
+.temperatureWidget {
+	position: relative;
+}
+
+.temperatureWidget > span {
+	position: absolute;
+	right: 10px;
+	top: -10px;
+}
+
+.temperatureWidget > input {
+	padding: 10px;
+	width: 400px;
+}
+
+.setupWidget {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+}
+
+.setupWidget img.icon {
+	padding: 10px;
+	cursor: pointer;
+	display: block;
+	margin-left: auto;
+}
+
+.wifiWidget {
+	background-color: #fff;
+	margin: 0;
+}
+
+.wifiWidget td > div {
+	text-align: left;	
+	font-size: 65%;
+}
+
+@media (max-width: 540px) {
+	body {
+		padding: 20px 5px;
+	}
+
+	.colorWidget {
+		padding: 5px 20px;
+	}
+
+	.colorWidget input {
+		padding: 10px 0;
+		width: 300px;
+	}
+
+	.brightnessWidget > input {
+		padding: 10px 0;
+		width: 300px;
+	}
+
+	.temperatureWidget > input {
+		padding: 10px 0;
+		width: 300px;
+	}
+}

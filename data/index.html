@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<meta name="viewport" content="width=device-width">		
+		<script src="js/toggleWidget.js"></script>
+		<script src="js/brightnessWidget.js"></script>
+		<script src="js/temperatureWidget.js"></script>
+		<script src="js/colorWidget.js"></script>
+		<script src="js/defaultWidget.js"></script>
+		<script src="js/setupWidget.js"></script>
+		<script src="js/wifiWidget.js"></script>
+		<script src="js/client.js"></script>
+		<script>
+			window.addEventListener("load", function() {
+				var client = new Client();
+				document.body.appendChild(client.node);
+			});
+		</script>
+	</head>
+	<body></body>
+</html>
+
