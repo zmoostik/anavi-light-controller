@@ -36,13 +36,13 @@ Client.prototype.init = function() {
 	this.node.appendChild(this.createRow("Brightness :", this.brightnessWidget.node));
 	this.brightnessWidget.apiGet();
 
-	//temperature
-	this.node.appendChild(this.createRow("White Balance :", this.temperatureWidget.node));
-	this.temperatureWidget.apiGet();
-
 	//color
 	this.node.appendChild(this.createRow("Color :", this.colorWidget.node));
 	this.colorWidget.apiGet();
+
+	//temperature
+	this.node.appendChild(this.createRow("White Balance :", this.temperatureWidget.node));
+	this.temperatureWidget.apiGet();
 
 	//d65
 	this.node.appendChild(this.createRow("D65 Calibrate :", this.d65Widget.node));
