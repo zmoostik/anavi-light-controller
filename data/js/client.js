@@ -45,7 +45,16 @@ Client.prototype.init = function() {
 	this.temperatureWidget.apiGet();
 
 	//d65
-	this.node.appendChild(this.createRow("D65 Calibrate :", this.d65Widget.node));
+	var button = document.createElement("button");
+	var content = document.createElement("div"); 
+	button.appendChild(document.createTextNode("Calibrate"));
+	button.setAttribute("type", "button");
+	this.node.appendChild(button);
+	button.addEventListener("click", function() { content.style.display = content.style.display == "none" ? "" : "none";  } );
+	content.style.display = "none";
+
+	this.node.appendChild(content);
+	content.appendChild(this.createRow("D65 Calibration :", this.d65Widget.node));
 	this.d65Widget.apiGet();
 
 	//led
