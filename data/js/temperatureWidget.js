@@ -16,7 +16,7 @@ TemperatureWidget.prototype.init = function() {
 
 	this.nodeInput.setAttribute("type", "range");
 	this.nodeInput.setAttribute("min", "1000");
-	this.nodeInput.setAttribute("max", "6500");
+	this.nodeInput.setAttribute("max", "8000");
 	this.nodeInput.setAttribute("step", "100");
 	this.node.appendChild(this.nodeInput);
 
