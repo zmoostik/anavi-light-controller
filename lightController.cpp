@@ -74,9 +74,9 @@ void LightController::write() {
 	if (index < 0) index = 0;
 	if (index > 55) index = 55;
 
-	analogWrite(pin_r, power ? color_r * brightness / 100.0 * blackbodyColor[index][0] * d63_r / 255.0 * 4.0 : 0);
-	analogWrite(pin_g, power ? color_g * brightness / 100.0 * blackbodyColor[index][1] * d63_g / 255.0 * 4.0 : 0);
-	analogWrite(pin_b, power ? color_b * brightness / 100.0 * blackbodyColor[index][2] * d63_b / 255.0 * 4.0 : 0);
+	analogWrite(pin_r, power ? color_r * brightness / 100.0 * blackbodyColor[index][0] * d65_r / 255.0 * 4.0 : 0);
+	analogWrite(pin_g, power ? color_g * brightness / 100.0 * blackbodyColor[index][1] * d65_g / 255.0 * 4.0 : 0);
+	analogWrite(pin_b, power ? color_b * brightness / 100.0 * blackbodyColor[index][2] * d65_b / 255.0 * 4.0 : 0);
 	digitalWrite(pin_led, led ? LOW : HIGH);
 }
 
@@ -87,6 +87,9 @@ void LightController::copy(LightController const &src) {
 	color_r = src.color_r;
 	color_g = src.color_g;
 	color_b = src.color_b;
+	d65_r = src.d65_r;
+	d65_g = src.d65_g;
+	d65_b = src.d65_b;
 	led = src.led;
 }
 
@@ -112,6 +115,30 @@ int LightController::getColorB() const {
 
 void LightController::setColorB(int const value) {
 	color_b = value;
+}
+
+int LightController::getD65R() const {
+	return d65_r;
+}
+
+void LightController::setD65R(int const value) {
+	d65_r = value;
+}
+
+int LightController::getD65G() const {
+	return d65_g;
+}
+
+void LightController::setD65G(int const value) {
+	d65_g = value;
+}
+
+int LightController::getD65B() const {
+	return d65_b;
+}
+
+void LightController::setD65B(int const value) {
+	d65_b = value;
 }
 
 bool LightController::getPower() const {
@@ -150,17 +177,22 @@ String LightController::getColorJSON() const {
 	return "{\"r\": " + String(color_r) + ", \"g\": " + String(color_g) + ", \"b\": " + String(color_b) + "}";
 }
 
+String LightController::getD65JSON() const {
+	return "{\"r\": " + String(d65_r) + ", \"g\": " + String(d65_g) + ", \"b\": " + String(d65_b) + "}";
+}
+
 String LightController::getJSON() const {
 	return "{"
-		"\"power\": " + (power ? "true" : "false") + ", "
+		"\"power\": " + String(power ? "true" : "false") + ", "
 		"\"brightness\": " + String(brightness) + ", "
 		"\"temperature\": " + String(temperature) + ", "
 		"\"color\": " + getColorJSON() + ", "
+		"\"d65\": " + getD65JSON() + ", "
 		"\"led\": " + (led ? "true" : "false") + 
 	"}";
 }
 
-void LightController::setParamJSON(String const name, String const value) {
+void LightController::setProperty(String const name, String const value) {
 	if (name == "power") {
 		setPower(value == "true");
 	}
@@ -179,8 +211,16 @@ void LightController::setParamJSON(String const name, String const value) {
 	else if (name == "color.b") {
 		setColorB(value.toInt());
 	}
+	else if (name == "d65.r") {
+		setD65R(value.toInt());
+	}
+	else if (name == "d65.g") {
+		setD65G(value.toInt());
+	}
+	else if (name == "d65.b") {
+		setD65B(value.toInt());
+	}
 	else if (name == "led") {
 		setLed(value == "true");
 	}	
 }
-

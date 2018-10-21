@@ -3,7 +3,8 @@ var Client = function() {
 	this.powerWidget = new ToggleWidget(this, "/power");
 	this.brightnessWidget = new BrightnessWidget(this);
 	this.temperatureWidget = new TemperatureWidget(this);
-	this.colorWidget = new ColorWidget(this);
+	this.colorWidget = new ColorWidget(this, "/color");
+	this.d65Widget = new ColorWidget(this, "/d65");
 	this.ledWidget = new ToggleWidget(this, "/led");
 	this.defaultWidget = new DefaultWidget(this);
 	this.setupWidget = new SetupWidget();
@@ -36,12 +37,16 @@ Client.prototype.init = function() {
 	this.brightnessWidget.apiGet();
 
 	//temperature
-	this.node.appendChild(this.createRow("Temperature :", this.temperatureWidget.node));
+	this.node.appendChild(this.createRow("White Balance :", this.temperatureWidget.node));
 	this.temperatureWidget.apiGet();
 
 	//color
 	this.node.appendChild(this.createRow("Color :", this.colorWidget.node));
 	this.colorWidget.apiGet();
+
+	//d65
+	this.node.appendChild(this.createRow("D65 Calibrate :", this.d65Widget.node));
+	this.d65Widget.apiGet();
 
 	//led
 	this.node.appendChild(this.createRow("Led :", this.ledWidget.node));

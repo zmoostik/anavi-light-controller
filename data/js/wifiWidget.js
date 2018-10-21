@@ -4,6 +4,7 @@ var WifiWidget = function(client) {
 	this.nodeSSID = document.createElement("input");
 	this.nodePasswd = document.createElement("input");
 	this.nodeEther = document.createElement("div");
+	this.nodeIP = document.createElement("div");
 	this.nodeStatus = document.createElement("div");
 	this.nodeSave = document.createElement("button");
 	this.nodeCancel = document.createElement("button");
@@ -33,19 +34,20 @@ WifiWidget.prototype.init = function() {
 
 	this.node.className = "wifiWidget";
 
-
 	var h2 = document.createElement("h2");
 	h2.appendChild(document.createTextNode("Wifi :"));
 	this.node.appendChild(h2);
 
 	var table = document.createElement("table");
 	table.appendChild(this.createRow("MAC Address :", this.nodeEther, "mac"));
-	table.appendChild(this.createRow("Status :", this.nodeStatus, "status"));
 	table.appendChild(this.createRow("SSID :", this.nodeSSID, "ssid"));
 	table.appendChild(this.createRow("Password :", this.nodePasswd, "passwd"));
+	table.appendChild(this.createRow("Status :", this.nodeStatus, "status"));
+	table.appendChild(this.createRow("IP :", this.nodeIP, "ip"));
 	this.node.appendChild(table);
 
 	this.nodeEther.appendChild(document.createTextNode(""));
+	this.nodeIP.appendChild(document.createTextNode(""));
 	this.nodeStatus.appendChild(document.createTextNode(""));
 	this.nodePasswd.setAttribute("type", "password");
 
@@ -73,21 +75,23 @@ WifiWidget.prototype.get = function() {
 		"ssid": this.nodeSSID.value,
 		"password": this.nodePasswd.value,
 		"status": this.nodeStatus.firstChild.nodeValue,
-		"ether": this.nodeEther.firstChild.nodeValue
+		"ether": this.nodeEther.firstChild.nodeValue,
+		"ip": this.nodeIP.firstChild.nodeValue
 	};
 };
 
-WifiWidget.prototype.set = function(ssid, password, ether, status) {
+WifiWidget.prototype.set = function(ssid, password, ether, status, ip) {
 	this.nodeSSID.value = ssid;
 	this.nodePasswd.value = password;
 	this.nodeStatus.firstChild.nodeValue = status;
 	this.nodeEther.firstChild.nodeValue = ether;
+	this.nodeIP.firstChild.nodeValue = ip;
 };
 
 WifiWidget.prototype.apiGet = function() {
 	var self = this;
 	this.client.loadJSON("/wifi", function(value) {
-		self.set(value.ssid, "", value.ether, value.status);
+		self.set(value.ssid, "", value.ether, value.status, value.ip);
 	}, "get");
 };
 

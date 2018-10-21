@@ -1,5 +1,6 @@
-var ColorWidget = function(client) {
+var ColorWidget = function(client, url) {
 	this.client = client;
+	this.url = url;
 	this.node = document.createElement("div");
 	this.nodeRGB = document.createElement("div");
 	this.nodeTable = document.createElement("table");
@@ -68,7 +69,7 @@ ColorWidget.prototype.on = function(name, fct) {
 
 ColorWidget.prototype.apiGet = function() {
 	var self = this;
-	this.client.loadJSON("/color", function(value) {
+	this.client.loadJSON(this.url, function(value) {
 		self.set(value.r, value.g, value.b);
 	}, "get");
 };
@@ -80,6 +81,6 @@ ColorWidget.prototype.apiPut = function() {
 		"&g=" + value.g +
 		"&b=" + value.b;
 
-	this.client.loadJSON("/color", function() {}, "put", args);
+	this.client.loadJSON(this.url, function() {}, "put", args);
 };
 

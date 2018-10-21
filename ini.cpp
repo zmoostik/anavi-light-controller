@@ -36,7 +36,7 @@ void Ini::add(String const name, int const value) {
 }
 
 void Ini::add(String const name, bool const value) {
-	add(name, value ? "true" : "false");
+	add(name, String(value ? "true" : "false"));
 }
 
 String Ini::get() {

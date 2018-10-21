@@ -21,10 +21,10 @@ void onNotFoundCb() {
 
 void onLedCb() {
 	if (server.method() == HTTP_PUT) { 
-		controller.setLedJSON(server.arg("value"));
+		controller.setLed(server.arg("value") == "true");
 		controller.write();
 	}
-	server.send(200, "text/json", controller.getLedJSON());
+	server.send(200, "text/json", controller.getLed() ? "true" : "false");
 }
 
 void onPowerCb() {
@@ -32,33 +32,43 @@ void onPowerCb() {
 		controller.power = server.arg("value") == "true";
 		controller.write();
 	}
-	server.send(200, "text/json", controller.getPowerJSON());
+	server.send(200, "text/json", controller.getPower() ? "true" : "false");
 }
 
 void onColorCb() {
 	if (server.method() == HTTP_PUT) { 
-		controller.setColorRJSON(server.arg("r"));
-		controller.setColorGJSON(server.arg("g"));
-		controller.setColorBJSON(server.arg("b"));
+		controller.setColorR(server.arg("r").toInt());
+		controller.setColorG(server.arg("g").toInt());
+		controller.setColorB(server.arg("b").toInt());
 		controller.write();
 	}
 	server.send(200, "text/json", controller.getColorJSON());
 }
 
-void onBrightnessCb() {
+void onD65Cb() {
 	if (server.method() == HTTP_PUT) { 
-		controller.setBrightnessJSON(server.arg("value"));
+		controller.setD65R(server.arg("r").toInt());
+		controller.setD65G(server.arg("g").toInt());
+		controller.setD65B(server.arg("b").toInt());
 		controller.write();
 	}
-	server.send(200, "text/json", controller.getBrightnessJSON());
+	server.send(200, "text/json", controller.getD65JSON());
+}
+
+void onBrightnessCb() {
+	if (server.method() == HTTP_PUT) { 
+		controller.setBrightness(server.arg("value").toInt());
+		controller.write();
+	}
+	server.send(200, "text/json", String(controller.getBrightness()));
 }
 
 void onTemperatureCb() {
 	if (server.method() == HTTP_PUT) { 
-		controller.setTemperatureJSON(server.arg("value"));
+		controller.setTemperature(server.arg("value").toInt());
 		controller.write();
 	}
-	server.send(200, "text/json", controller.getTemperatureJSON());
+	server.send(200, "text/json", String(controller.getTemperature()));
 }
 
 void onDefaultCb() {
@@ -66,7 +76,7 @@ void onDefaultCb() {
 		for (int i = 0; i < server.args(); i++) {
 			String name = server.argName(i);
 			String value = server.arg(i);
-			default_settings.setParamJSON(name, value);
+			default_settings.setProperty(name, value);
 			configWrite(default_settings);			
 		}
 	}
@@ -101,7 +111,8 @@ void onWifiCb() {
 		server.send(200, "text/json", "{"
 			"\"ssid\": \"" + WiFi.SSID() + "\", "
 			"\"ether\": \"" + WiFi.macAddress() + "\", "
-			"\"status\": \"" + status + "\""
+			"\"status\": \"" + status + "\", "
+			"\"ip\": \"" + WiFi.localIP().toString() + "\""
 		"}");
 	}
 }
@@ -170,14 +181,14 @@ void configWrite(LightController const controller) {
 	ini.add("color.r", controller.getColorR());
 	ini.add("color.g", controller.getColorG());
 	ini.add("color.b", controller.getColorB());
-	ini.add("d63.r", controller.getD63R());
-	ini.add("d63.g", controller.getD63G());
-	ini.add("d63.b", controller.getD63B());
+	ini.add("d65.r", controller.getD65R());
+	ini.add("d65.g", controller.getD65G());
+	ini.add("d65.b", controller.getD65B());
 	ini.add("brightness", controller.getBrightness());
 	ini.add("temperature", controller.getTemperature());
 	ini.add("power", controller.getPower());
 	ini.add("led", controller.getLed());
-
+	
 	File f = SPIFFS.open("/settings.ini", "w");
 	if (!f) {
 		Serial.println("Could not open file");
@@ -196,7 +207,7 @@ void configRead() {
 
 	Ini ini(f.readString());
 	ini.parse([] (String const name, String const value) {
-		default_settings.setParamJSON(name, value);
+		default_settings.setProperty(name, value);
 	});
 }
 
@@ -219,6 +230,7 @@ void setup() {
 	server.on("/brightness", onBrightnessCb);
 	server.on("/temperature", onTemperatureCb);
 	server.on("/color", onColorCb);
+	server.on("/d65", onD65Cb);
 	server.on("/led", onLedCb);
 	server.on("/default", onDefaultCb);
 	server.on("/wifi", onWifiCb);

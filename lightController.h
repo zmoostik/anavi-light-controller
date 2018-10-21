@@ -13,9 +13,9 @@ public:
 	int color_r = 0;
 	int color_g = 0;
 	int color_b = 0;
-	int d63_r = 255;
-	int d63_g = 140;
-	int d63_b = 35;
+	int d65_r = 255;
+	int d65_g = 140;
+	int d65_b = 35;
 	int brightness = 0;
 	int temperature = 6500;
 	bool power = false;
@@ -25,6 +25,15 @@ public:
 	void begin();
 	void write();
 	void copy(LightController const &src);
+
+	int getD65R() const;
+	void setD65R(int const value);
+
+	int getD65G() const;
+	void setD65G(int const value);
+
+	int getD65B() const;
+	void setD65B(int const value);
 
 	int getColorR() const;
 	void setColorR(int const value);
@@ -48,8 +57,10 @@ public:
 	void setLed(bool const value);
 
 	String getColorJSON() const;
+	String getD65JSON() const;
 	String getJSON() const;
-	void setParamJSON(String const name, String const value);
+
+	void setProperty(String const name, String const value);
 };
 
 #endif
