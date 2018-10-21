@@ -3,15 +3,15 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <FS.h>
-#include "anaviLightController.h"
+#include "lightController.h"
 #include "ini.h"
 
 String mdns_domain = "anavi-light-controller";
 String const ap_ssid = "anavi-light-controller";
 String const ap_password = "leonplovdiv";
 
-AnaviLightController controller;
-AnaviLightController default_settings;
+LightController controller;
+LightController default_settings;
 
 ESP8266WebServer server(80);
 
@@ -67,7 +67,7 @@ void onDefaultCb() {
 			String name = server.argName(i);
 			String value = server.arg(i);
 			default_settings.setParamJSON(name, value);
-			anaviConfigWrite(default_settings);			
+			configWrite(default_settings);			
 		}
 	}
 	server.send(200, "text/json", default_settings.getJSON());
@@ -165,15 +165,18 @@ void setdownWifi() {
 	}
 }
 
-void anaviConfigWrite(AnaviLightController const controller) {
+void configWrite(LightController const controller) {
 	Ini ini;
-	ini.add("color.r", controller.getColorRJSON());
-	ini.add("color.g", controller.getColorGJSON());
-	ini.add("color.b", controller.getColorBJSON());
-	ini.add("brightness", controller.getBrightnessJSON());
-	ini.add("temperature", controller.getTemperatureJSON());
-	ini.add("power", controller.getPowerJSON());
-	ini.add("led", controller.getLedJSON());
+	ini.add("color.r", controller.getColorR());
+	ini.add("color.g", controller.getColorG());
+	ini.add("color.b", controller.getColorB());
+	ini.add("d63.r", controller.getD63R());
+	ini.add("d63.g", controller.getD63G());
+	ini.add("d63.b", controller.getD63B());
+	ini.add("brightness", controller.getBrightness());
+	ini.add("temperature", controller.getTemperature());
+	ini.add("power", controller.getPower());
+	ini.add("led", controller.getLed());
 
 	File f = SPIFFS.open("/settings.ini", "w");
 	if (!f) {
@@ -184,11 +187,11 @@ void anaviConfigWrite(AnaviLightController const controller) {
 	f.close();
 }
 
-void anaviConfigRead() {
+void configRead() {
 	File f = SPIFFS.open("/settings.ini", "r");
 	if (!f) {
-    	Serial.println("Could not open setup file");
-    	return;
+	    	Serial.println("Could not open setup file");
+	    	return;
 	}
 
 	Ini ini(f.readString());
@@ -201,7 +204,7 @@ void setup() {
 	Serial.begin(115200);
 
 	SPIFFS.begin();
-	anaviConfigRead();
+	configRead();
 
 	controller.begin();
 	controller.copy(default_settings);

@@ -31,6 +31,14 @@ void Ini::add(String const name, String const value) {
 	text += name + "=" + value + "\n";
 }
 
+void Ini::add(String const name, int const value) {
+	add(name, String(value));
+}
+
+void Ini::add(String const name, bool const value) {
+	add(name, value ? "true" : "false");
+}
+
 String Ini::get() {
 	return text;
 }

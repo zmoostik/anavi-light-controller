@@ -1,4 +1,4 @@
-#include "anaviLightController.h"
+#include "lightController.h"
 
 #include <Arduino.h>
 
@@ -62,25 +62,25 @@ const float blackbodyColor[56][3] = {
 	{1.00000000, 1.00000000, 1.00000000} /* 6500K */
 };
 
-void AnaviLightController::begin() {
+void LightController::begin() {
 	pinMode(pin_led, OUTPUT);
 	pinMode(pin_r, OUTPUT);
 	pinMode(pin_g, OUTPUT);
 	pinMode(pin_b, OUTPUT);
 }
 
-void AnaviLightController::write() {
+void LightController::write() {
 	int index = (temperature - 1000) / 100;
 	if (index < 0) index = 0;
 	if (index > 55) index = 55;
 
-	analogWrite(pin_r, power ? color_r * brightness / 100.0 * blackbodyColor[index][0] * 4.0 * 1.000 : 0);
-	analogWrite(pin_g, power ? color_g * brightness / 100.0 * blackbodyColor[index][1] * 4.0 * 0.546 : 0);
-	analogWrite(pin_b, power ? color_b * brightness / 100.0 * blackbodyColor[index][2] * 4.0 * 0.187 : 0);
+	analogWrite(pin_r, power ? color_r * brightness / 100.0 * blackbodyColor[index][0] * d63_r / 255.0 * 4.0 : 0);
+	analogWrite(pin_g, power ? color_g * brightness / 100.0 * blackbodyColor[index][1] * d63_g / 255.0 * 4.0 : 0);
+	analogWrite(pin_b, power ? color_b * brightness / 100.0 * blackbodyColor[index][2] * d63_b / 255.0 * 4.0 : 0);
 	digitalWrite(pin_led, led ? LOW : HIGH);
 }
 
-void AnaviLightController::copy(AnaviLightController const &src) {
+void LightController::copy(LightController const &src) {
 	power = src.power;
 	brightness = src.brightness;
 	temperature = src.temperature;
@@ -90,97 +90,97 @@ void AnaviLightController::copy(AnaviLightController const &src) {
 	led = src.led;
 }
 
-String AnaviLightController::getColorRJSON() const {
-	return String(color_r);
+int LightController::getColorR() const {
+	return color_r;
 }
 
-void AnaviLightController::setColorRJSON(String const json) {
-	color_r = json.toInt();
+void LightController::setColorR(int const value) {
+	color_r = value;
 }
 
-String AnaviLightController::getColorGJSON() const {
-	return String(color_g);
+int LightController::getColorG() const {
+	return color_g;
 }
 
-void AnaviLightController::setColorGJSON(String const json) {
-	color_g = json.toInt();
+void LightController::setColorG(int const value) {
+	color_g = value;
 }
 
-String AnaviLightController::getColorBJSON() const {
-	return String(color_b);
+int LightController::getColorB() const {
+	return color_b;
 }
 
-void AnaviLightController::setColorBJSON(String const json) {
-	color_b = json.toInt();
+void LightController::setColorB(int const value) {
+	color_b = value;
 }
 
-String AnaviLightController::getColorJSON() const {
+bool LightController::getPower() const {
+	return power;
+}
+
+void LightController::setPower(bool const value) {
+	power = value;
+}
+
+bool LightController::getLed() const {
+	return led;
+}
+
+void LightController::setLed(bool const value) {
+	led = value;
+}
+
+int LightController::getBrightness() const {
+	return brightness;
+}
+
+void LightController::setBrightness(int const value) {
+	brightness = value;
+}
+
+int LightController::getTemperature() const {
+	return temperature;
+}
+
+void LightController::setTemperature(int const value) {
+	temperature = value;
+}
+
+String LightController::getColorJSON() const {
 	return "{\"r\": " + String(color_r) + ", \"g\": " + String(color_g) + ", \"b\": " + String(color_b) + "}";
 }
 
-String AnaviLightController::getPowerJSON() const {
-	return power ? "true" : "false";
-}
-
-void AnaviLightController::setPowerJSON(String const json) {
-	power = json == "true";
-}
-
-String AnaviLightController::getLedJSON() const {
-	return led ? "true" : "false";
-}
-
-void AnaviLightController::setLedJSON(String const json) {
-	led = json == "true";
-}
-
-String AnaviLightController::getBrightnessJSON() const {
-	return String(brightness);
-}
-
-void AnaviLightController::setBrightnessJSON(String const json) {
-	brightness = json.toInt();
-}
-
-String AnaviLightController::getTemperatureJSON() const {
-	return String(temperature);
-}
-
-void AnaviLightController::setTemperatureJSON(String const json) {
-	temperature = json.toInt();
-}
-
-String AnaviLightController::getJSON() const {
+String LightController::getJSON() const {
 	return "{"
-		"\"power\": " + getPowerJSON() + ", "
-		"\"brightness\": " + getBrightnessJSON() + ", "
-		"\"temperature\": " + getTemperatureJSON() + ", "
+		"\"power\": " + (power ? "true" : "false") + ", "
+		"\"brightness\": " + String(brightness) + ", "
+		"\"temperature\": " + String(temperature) + ", "
 		"\"color\": " + getColorJSON() + ", "
-		"\"led\": " + getLedJSON() + 
+		"\"led\": " + (led ? "true" : "false") + 
 	"}";
 }
 
-void AnaviLightController::setParamJSON(String const name, String const value) {
+void LightController::setParamJSON(String const name, String const value) {
 	if (name == "power") {
-		setPowerJSON(value);
+		setPower(value == "true");
 	}
 	else if (name == "brightness") {
-		setBrightnessJSON(value);
+		setBrightness(value.toInt());
 	}
 	else if (name == "temperature") {
-		setTemperatureJSON(value);
+		setTemperature(value.toInt());
 	}
 	else if (name == "color.r") {
-		setColorRJSON(value);
+		setColorR(value.toInt());
 	}
 	else if (name == "color.g") {
-		setColorGJSON(value);
+		setColorG(value.toInt());
 	}
 	else if (name == "color.b") {
-		setColorBJSON(value);
+		setColorB(value.toInt());
 	}
 	else if (name == "led") {
-		setLedJSON(value);
+		setLed(value == "true");
 	}	
 }
 
